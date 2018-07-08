@@ -1,29 +1,23 @@
 package Gomoku;
 
 public class Board {
-    private String[][] desk;
+    private Cell[][] desk;
 
     public Board() {
-        desk = new String[19][19];
+        desk = new Cell[19][19];
         for(int i = 0; i < desk.length; i++)
             for(int j = 0; j < desk.length; j++)
-                desk[i][j] = ".";
+                desk[i][j] = new Cell(i, j, '.');
     }
 
-    public String[][] getDesk() {
+    public Cell[][] getDesk() {
         return desk;
     }
 
-    public void doStep(String figure, int x, int y) throws StepError {
-        if(validCell(x,y))
-            desk[y][x] = figure;
+    public void doStep( int x, int y, char figure) throws StepError {
+        if(desk[x][y].isValid())
+            desk[x][y].setFigure(figure);
         else throw new StepError(x, y);
-    }
-
-    private boolean validCell(int x, int y){
-        return x >= 0 && x <= 18 &&
-                y >= 0 && y <= 18 &&
-                desk[y][x].equals(".");
     }
 
     public void display(){
