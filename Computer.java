@@ -4,46 +4,46 @@ import javafx.util.Pair;
 
 import java.util.Random;
 
-public class Computer {
+class Computer {
     private char figure;
     private int lastStepX;
     private int lastStepY;
 
 
-    public Computer(char figure) {
+    Computer(char figure) {
         this.figure = figure;
     }
 
-    public char getFigure() {
+    char getFigure() {
         return figure;
     }
 
-    public int getLastStepX() {
+    int getLastStepX() {
         return lastStepX;
     }
 
-    public int getLastStepY() {
+    int getLastStepY() {
         return lastStepY;
     }
 
-    public void displayLastStep(){
+    void displayLastStep(){
         System.out.println("last step player(" + figure +
                 ") : [" + getLastStepX() + "][" + getLastStepY() + "]");
     }
 
-    public void doStep(Cell[][] desk){
-        Pair<Integer, Integer> pair = generateStep(desk);
-        lastStepX = pair.getKey();
-        lastStepY = pair.getValue();
+    void doStep(Cell[][] desk){
+        Cell cell = generateStep(desk);
+        lastStepX = cell.getX();
+        lastStepY = cell.getY();
     }
 
-    private Pair<Integer, Integer> generateStep(Cell[][] desk){
-        Pair<Integer, Integer> pair;
+    private Cell generateStep(Cell[][] desk){
+        Cell newCell;
         Random random = new Random();
         do{
-            pair = new Pair<>(random.nextInt(18), random.nextInt(18));
-        }while(!validPair(pair, desk));
-        return pair;
+            newCell = new Cell(random.nextInt(18), random.nextInt(18), figure);
+        }while(!desk[newCell.getX()][newCell.getY()].isValid());
+        return newCell;
     }
 
     private boolean finish(Cell[][] desk){
