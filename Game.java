@@ -65,7 +65,7 @@ public class Game {
         do{
             try {
                 player.doStep();
-                board.doStep(player.getFigure(), player.getLastStepX(), player.getLastStepY());
+                board.doStep(player.getLastStepX(), player.getLastStepY(), player.getFigure());
                 again = false;
             } catch (StepError stepError) {
                 System.out.println("Try again");
@@ -78,7 +78,7 @@ public class Game {
         do{
             try {
                 computer.doStep(board.getDesk());
-                board.doStep(computer.getFigure(), computer.getLastStepX(), computer.getLastStepY());
+                board.doStep(computer.getLastStepX(), computer.getLastStepY(), computer.getFigure());
                 again = false;
             } catch (StepError stepError) {
                 System.out.println("Try again");
@@ -95,14 +95,14 @@ public class Game {
     }
 
     private void createPlayersAndBoard(){
-        String playersFigure, computerFigure;
+        char playersFigure, computerFigure;
 
         playersFigure = chooseFigure();
-        if(playersFigure == "X") {
+        if(playersFigure == 'X') {
             whoFirst = "player";
-            computerFigure = "O";
+            computerFigure = 'O';
         } else {
-            computerFigure = "X";
+            computerFigure = 'X';
             whoFirst = "computer";
         }
 
@@ -111,13 +111,13 @@ public class Game {
         board = new Board();
     }
 
-    private String chooseFigure(){
+    private char chooseFigure(){
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("What figure are you going to play?");
         System.out.println("Input <yes> if you want to play by <X>");
         String answer = scanner.nextLine();
-        if(answer.equalsIgnoreCase("yes")) return "X";
-        return "O";
+        if(answer.equalsIgnoreCase("yes")) return 'X';
+        return 'O';
     }
 }
