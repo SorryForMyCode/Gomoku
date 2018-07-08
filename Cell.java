@@ -46,4 +46,9 @@ public class Cell {
     public void setFigure(char figure) {
         this.figure = figure;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(figure);
+    }
 }
