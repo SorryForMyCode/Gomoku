@@ -2,13 +2,13 @@ package Gomoku;
 
 import java.util.Scanner;
 
-public class Game {
+class Game {
     private Player player;
     private Computer computer;
     private Board board;
     private String whoFirst;
 
-    public void startGame(boolean showBoard){
+    void startGame(boolean showBoard){
         createPlayersAndBoard();
         fight(showBoard);
     }
