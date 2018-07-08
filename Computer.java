@@ -5,16 +5,16 @@ import javafx.util.Pair;
 import java.util.Random;
 
 public class Computer {
-    private String figure;
+    private char figure;
     private int lastStepX;
     private int lastStepY;
 
 
-    public Computer(String figure) {
+    public Computer(char figure) {
         this.figure = figure;
     }
 
-    public String getFigure() {
+    public char getFigure() {
         return figure;
     }
 
@@ -31,13 +31,13 @@ public class Computer {
                 ") : [" + getLastStepX() + "][" + getLastStepY() + "]");
     }
 
-    public void doStep(String[][] desk){
+    public void doStep(Cell[][] desk){
         Pair<Integer, Integer> pair = generateStep(desk);
         lastStepX = pair.getKey();
         lastStepY = pair.getValue();
     }
 
-    private Pair<Integer, Integer> generateStep(String[][] desk){
+    private Pair<Integer, Integer> generateStep(Cell[][] desk){
         Pair<Integer, Integer> pair;
         Random random = new Random();
         do{
@@ -46,22 +46,22 @@ public class Computer {
         return pair;
     }
 
-    private boolean finish(String[][] desk){
+    private boolean finish(Cell[][] desk){
         checkVertical(4, figure, desk);
         return checkDiagonal(figure, desk) || checkHorizontal(figure, desk) ;
     }
 
-    private boolean validPair(Pair<Integer, Integer> pair, String[][] desk){
+    private boolean validPair(Pair<Integer, Integer> pair, Cell[][] desk){
         return validCell(pair.getKey(), pair.getValue(), desk);
     }
 
-    private boolean validCell(int x, int y, String[][] desk){
+    private boolean validCell(int x, int y, Cell[][] desk){
         return x >= 0 && x <= 18 &&
                 y >= 0 && y <= 18 &&
                 desk[y][x].equals(".");
     }
 
-    private boolean checkDiagonal(String figure, String[][] desk){
+    private boolean checkDiagonal(char figure, Cell[][] desk){
         for(int i = 0; i < desk.length; i++)
             if(leftToRightDiagonal(i, 0, figure, desk)) return true;
 
@@ -77,7 +77,7 @@ public class Computer {
         return false;
     }
 
-    private boolean leftToRightDiagonal(int x, int y, String figure, String[][] desk){
+    private boolean leftToRightDiagonal(int x, int y, char figure, String[][] desk){
         int count = 0, maxCount = 0;
         for (int i = y, j = x; i < desk.length && j < desk.length; i++, j++) {
             if(desk[i][j].equals(figure)) count++;
@@ -91,7 +91,7 @@ public class Computer {
         }
         return maxCount >= 5;
     }
-    
+
     private boolean rightToLeftDiagonal(int x, int y, String figure, String[][] desk){
         int count = 0, maxCount = 0;
         for (int i = y, j = x; i < desk.length && j >= 0; i++, j--) {

@@ -17,22 +17,22 @@ public class SetOfCell {
         this.size = size;
     }
 
-    public int howManyContains(String figure){
+    public int howManyContains(char figure){
         int count = 0;
 
         for (Cell c : cells)
-            if(c.getFigure().equals(figure)) {
+            if(c.getFigure() == figure) {
                 count++;
             }
         return count;
     }
 
-    private int howManyNearby(String figure){
+    private int howManyNearby(char figure){
         int count = 0, maxCount = 0;
         Cell prev = null, next = null;
 
         for (Cell c : cells) {
-            if (c.getFigure().equals(figure))
+            if (c.getFigure() == figure)
                 count++;
             else {
                 if(count != 0) next = c;
@@ -50,13 +50,13 @@ public class SetOfCell {
         return maxCount;
     }
 
-    public Cell blockOrFinish(String figure){
+    public Cell blockOrFinish(char figure){
         Cell cell = fourFromFive(figure);
         return cell;
     }
 
-    private Cell fourFromFive(String figure){
-        if(howManyContains(figure) == size - 1 && howManyContains(".") == 1){
+    private Cell fourFromFive(char figure){
+        if(howManyContains(figure) == size - 1 && howManyContains('.') == 1){
             howManyNearby(figure);
             return first != null ? first : last;
         }
