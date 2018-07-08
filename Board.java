@@ -2,11 +2,12 @@ package Gomoku;
 
 class Board {
     private Cell[][] desk;
+    private int size = 19;
 
     Board() {
-        desk = new Cell[19][19];
-        for(int i = 0; i < desk.length; i++)
-            for(int j = 0; j < desk.length; j++)
+        desk = new Cell[size][size];
+        for(int i = 0; i < size; i++)
+            for(int j = 0; j < size; j++)
                 desk[i][j] = new Cell(i, j, '.');
     }
 
@@ -22,9 +23,9 @@ class Board {
 
     void display(){
         System.out.println("-------------------------------------");
-        for(Cell[] cells : desk) {
-            for(Cell cell : cells)
-                System.out.print(cell.getFigure() + " ");
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++)
+                System.out.print(desk[j][i].getFigure() + " ");
             System.out.println();
         }
         System.out.println("-------------------------------------");
@@ -34,7 +35,6 @@ class Board {
         for(Cell[] cells : desk)
             for(Cell cell : cells)
                 if(cell.getFigure() == '.') return false;
-
         return true;
     }
 
@@ -53,7 +53,7 @@ class Board {
             if(rightToLeftDiagonal(i, 0, figure)) return true;
 
         for (int i = 1; i < desk.length; i++)
-            if(leftToRightDiagonal(desk.length - 1, i, figure)) return true;
+            if(rightToLeftDiagonal(desk.length - 1, i, figure)) return true;
 
         return false;
     }
