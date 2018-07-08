@@ -9,8 +9,15 @@ class Game {
     private String whoFirst;
 
     void startGame(boolean showBoard){
-        createPlayersAndBoard();
-        fight(showBoard);
+        do {
+            createPlayersAndBoard();
+            fight(showBoard);
+        }while(wantMore().equals("yes"));
+    }
+
+    private String wantMore(){
+        System.out.println("Wanna try again?");
+        return new Scanner(System.in).nextLine();
     }
 
     private void fight(boolean showBoard){
