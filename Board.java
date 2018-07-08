@@ -1,45 +1,44 @@
 package Gomoku;
 
-public class Board {
+class Board {
     private Cell[][] desk;
 
-    public Board() {
+    Board() {
         desk = new Cell[19][19];
         for(int i = 0; i < desk.length; i++)
             for(int j = 0; j < desk.length; j++)
                 desk[i][j] = new Cell(i, j, '.');
     }
 
-    public Cell[][] getDesk() {
+    Cell[][] getDesk() {
         return desk;
     }
 
-    public void doStep( int x, int y, char figure) throws StepError {
+    void doStep( int x, int y, char figure) throws StepError {
         if(desk[x][y].isValid())
             desk[x][y].setFigure(figure);
         else throw new StepError(x, y);
     }
 
-    public void display(){
+    void display(){
         System.out.println("-------------------------------------");
-        for(int i = 0; i < desk.length; i++) {
-            for (int j = 0; j < desk.length; j++)
-                System.out.print(desk[i][j] + " ");
-
+        for(Cell[] cells : desk) {
+            for(Cell cell : cells)
+                System.out.print(cell.getFigure() + " ");
             System.out.println();
         }
         System.out.println("-------------------------------------");
     }
 
-    public boolean isFull(){
-        for (int i = 0; i < desk.length; i++)
-            for (int j = 0; j < desk.length; j++)
-                if(desk[i][j].getFigure() == '.') return false;
+    boolean isFull(){
+        for(Cell[] cells : desk)
+            for(Cell cell : cells)
+                if(cell.getFigure() == '.') return false;
 
         return true;
     }
 
-    public boolean checkVictory(char figure){
+    boolean checkVictory(char figure){
         return checkDiagonal(figure) || checkHorizontal(figure) || checkVertical(figure);
     }
 
@@ -119,7 +118,7 @@ public class Board {
 }
 
 class StepError extends Exception{
-    public StepError(int x, int y) {
+    StepError(int x, int y) {
         super("Invalid step by: [" + x + "][" + y + "] !");
     }
 }
