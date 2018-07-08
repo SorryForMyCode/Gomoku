@@ -1,78 +1,69 @@
 package Gomoku;
 
-public class Board {
-    private String[][] desk;
+class Board {
+    private Cell[][] desk;
+    private int size = 19;
 
-    public Board() {
-        desk = new String[19][19];
-        for(int i = 0; i < desk.length; i++)
-            for(int j = 0; j < desk.length; j++)
-                desk[i][j] = ".";
+    Board() {
+        desk = new Cell[size][size];
+        for(int i = 0; i < size; i++)
+            for(int j = 0; j < size; j++)
+                desk[i][j] = new Cell(i, j, '.');
     }
 
-    public String[][] getDesk() {
+    Cell[][] getDesk() {
         return desk;
     }
 
-    public void doStep(String figure, int x, int y) throws StepError {
-        if(validCell(x,y))
-            desk[y][x] = figure;
+    void doStep( int x, int y, char figure) throws StepError {
+        if(desk[x][y].isValid())
+            desk[x][y].setFigure(figure);
         else throw new StepError(x, y);
     }
 
-    private boolean validCell(int x, int y){
-        return x >= 0 && x <= 18 &&
-                y >= 0 && y <= 18 &&
-                desk[y][x].equals(".");
-    }
-
-    public void display(){
+    void display(){
         System.out.println("-------------------------------------");
-        for(int i = 0; i < desk.length; i++) {
-            for (int j = 0; j < desk.length; j++)
-                System.out.print(desk[i][j] + " ");
-
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++)
+                System.out.print(desk[j][i].getFigure() + " ");
             System.out.println();
         }
         System.out.println("-------------------------------------");
     }
 
-    public boolean isFull(){
-        for (int i = 0; i < desk.length; i++)
-            for (int j = 0; j < desk.length; j++)
-                if(desk[i][j].equals(".")) return false;
-
+    boolean isFull(){
+        for(Cell[] cells : desk)
+            for(Cell cell : cells)
+                if(cell.getFigure() == '.') return false;
         return true;
     }
 
-    public boolean checkVictory(String figure){
+    boolean checkVictory(char figure){
         return checkDiagonal(figure) || checkHorizontal(figure) || checkVertical(figure);
     }
 
-    private boolean checkDiagonal(String figure){
-        for(int i = 0; i < desk.length; i++)
+    private boolean checkDiagonal(char figure){
+        for(int i = 0; i < size; i++)
             if(leftToRightDiagonal(i, 0, figure)) return true;
 
-        for (int i = 1; i < desk.length; i++)
+        for (int i = 1; i < size; i++)
             if(leftToRightDiagonal(0, i, figure)) return true;
 
-        for (int i = 0; i < desk.length; i++)
+        for (int i = 0; i < size; i++)
             if(rightToLeftDiagonal(i, 0, figure)) return true;
 
-        for (int i = 1; i < desk.length; i++)
-            if(leftToRightDiagonal(desk.length - 1, i, figure)) return true;
+        for (int i = 1; i < size; i++)
+            if(rightToLeftDiagonal(size - 1, i, figure)) return true;
 
         return false;
     }
 
-    private boolean leftToRightDiagonal(int x, int y, String figure){
+    private boolean leftToRightDiagonal(int x, int y, char figure){
         int count = 0, maxCount = 0;
-        for (int i = y, j = x; i < desk.length && j < desk.length; i++, j++) {
-            if(desk[i][j].equals(figure)) count++;
-            if(!desk[i][j].equals(figure) &&
-                    count != 0 ||
-                    i == desk.length - 1 ||
-                    j == desk.length - 1){
+        for (int i = y, j = x; i < size && j < size; i++, j++) {
+            if(desk[i][j].getFigure() == figure) count++;
+
+            if(desk[i][j].getFigure() != figure && count != 0 || i == size - 1 || j == size - 1){
                 if(count > maxCount) maxCount = count;
                 count = 0;
             }
@@ -80,13 +71,13 @@ public class Board {
         return maxCount >= 5;
     }
 
-    private boolean rightToLeftDiagonal(int x, int y, String figure){
+    private boolean rightToLeftDiagonal(int x, int y, char figure){
         int count = 0, maxCount = 0;
-        for (int i = y, j = x; i < desk.length && j >= 0; i++, j--) {
-            if(desk[i][j].equals(figure)) count++;
-            if(!desk[i][j].equals(figure) &&
+        for (int i = y, j = x; i < size && j >= 0; i++, j--) {
+            if(desk[i][j].getFigure() == figure) count++;
+            if(desk[i][j].getFigure() != figure &&
                     count != 0 ||
-                    i == desk.length - 1 ||
+                    i == size - 1 ||
                     j == 0){
                 if(count > maxCount) maxCount = count;
                 count = 0;
@@ -95,12 +86,12 @@ public class Board {
         return maxCount >= 5;
     }
 
-    private boolean checkVertical(String figure){
+    private boolean checkVertical(char figure){
         int count = 0 , maxCount = 0;
-        for(int i = 0; i < desk.length; i++){ //2coord
-            for (int j = 0; j < desk.length; j++) { //1coord
-                if(desk[j][i].equals(figure)) count++;
-                if(!desk[j][i].equals(figure) && count != 0 || j == desk.length - 1){
+        for(int i = 0; i < size; i++){ //2coord
+            for (int j = 0; j < size; j++) { //1coord
+                if(desk[i][j].getFigure() == figure) count++;
+                if(desk[i][j].getFigure() != figure && count != 0 || j == size - 1){
                     if(count > maxCount) maxCount = count;
                     count = 0;
                 }
@@ -109,12 +100,12 @@ public class Board {
         return maxCount >= 5;
     }
 
-    private boolean checkHorizontal(String figure){
+    private boolean checkHorizontal(char figure){
         int count = 0 , maxCount = 0;
-        for(int i = 0; i < desk.length; i++){ //1coord
-            for (int j = 0; j < desk.length; j++) { //2coord
-                if(desk[i][j].equals(figure)) count++;
-                if(!desk[i][j].equals(figure) && count != 0 || j == desk.length - 1){
+        for(int i = 0; i < size; i++){ //1coord
+            for (int j = 0; j < size; j++) { //2coord
+                if(desk[i][j].getFigure() == figure) count++;
+                if(desk[i][j].getFigure() != figure && count != 0 || j == size - 1){
                     if(count > maxCount) maxCount = count;
                     count = 0;
                 }
@@ -125,7 +116,7 @@ public class Board {
 }
 
 class StepError extends Exception{
-    public StepError(int x, int y) {
+    StepError(int x, int y) {
         super("Invalid step by: [" + x + "][" + y + "] !");
     }
 }

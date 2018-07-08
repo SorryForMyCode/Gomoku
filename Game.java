@@ -2,15 +2,22 @@ package Gomoku;
 
 import java.util.Scanner;
 
-public class Game {
+class Game {
     private Player player;
     private Computer computer;
     private Board board;
     private String whoFirst;
 
-    public void startGame(boolean showBoard){
-        createPlayersAndBoard();
-        fight(showBoard);
+    void startGame(boolean showBoard){
+        do {
+            createPlayersAndBoard();
+            fight(showBoard);
+        }while(wantMore().equals("yes"));
+    }
+
+    private String wantMore(){
+        System.out.println("Wanna try again?");
+        return new Scanner(System.in).nextLine();
     }
 
     private void fight(boolean showBoard){
@@ -19,24 +26,24 @@ public class Game {
             if(whoFirst.equals("player")){
                 doItUntilItWorksOutForPlayer();
                 if(showBoard) board.display();
-                if(verificationX()){
+                if(verification('X')){
                     xWin = true; continue;
                 }
 
                 doItUntilWorksOutForComputer();
                 if(showBoard) board.display();
-                if(verificationO()){
+                if(verification('O')){
                     oWin = true; continue;
                 }
             } else {
                 doItUntilWorksOutForComputer();
                 if(showBoard) board.display();
-                if(verificationX()){
+                if(verification('X')){
                     xWin = true; continue;
                 }
                 doItUntilItWorksOutForPlayer();
                 if(showBoard) board.display();
-                if(verificationO()){
+                if(verification('O')){
                     oWin = true; continue;
                 }
             }
@@ -65,7 +72,7 @@ public class Game {
         do{
             try {
                 player.doStep();
-                board.doStep(player.getFigure(), player.getLastStepX(), player.getLastStepY());
+                board.doStep(player.getLastStepX(), player.getLastStepY(), player.getFigure());
                 again = false;
             } catch (StepError stepError) {
                 System.out.println("Try again");
@@ -78,31 +85,27 @@ public class Game {
         do{
             try {
                 computer.doStep(board.getDesk());
-                board.doStep(computer.getFigure(), computer.getLastStepX(), computer.getLastStepY());
+                board.doStep(computer.getLastStepX(), computer.getLastStepY(), computer.getFigure());
                 again = false;
             } catch (StepError stepError) {
-                System.out.println("Try again");
+                System.out.println("Try again [" + computer.getLastStepX() + "][" + computer.getLastStepY() + "]");
             }
         }while (again);
     }
 
-    private boolean verificationX(){
-        return board.checkVictory("X");
-    }
-
-    private boolean verificationO(){
-        return board.checkVictory("O");
+    private boolean verification(char figure){
+        return board.checkVictory(figure);
     }
 
     private void createPlayersAndBoard(){
-        String playersFigure, computerFigure;
+        char playersFigure, computerFigure;
 
         playersFigure = chooseFigure();
-        if(playersFigure == "X") {
+        if(playersFigure == 'X') {
             whoFirst = "player";
-            computerFigure = "O";
+            computerFigure = 'O';
         } else {
-            computerFigure = "X";
+            computerFigure = 'X';
             whoFirst = "computer";
         }
 
@@ -111,13 +114,13 @@ public class Game {
         board = new Board();
     }
 
-    private String chooseFigure(){
+    private char chooseFigure(){
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("What figure are you going to play?");
         System.out.println("Input <yes> if you want to play by <X>");
         String answer = scanner.nextLine();
-        if(answer.equalsIgnoreCase("yes")) return "X";
-        return "O";
+        if(answer.equalsIgnoreCase("yes")) return 'X';
+        return 'O';
     }
 }

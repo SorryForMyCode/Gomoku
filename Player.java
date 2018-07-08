@@ -2,33 +2,33 @@ package Gomoku;
 
 import java.util.Scanner;
 
-public class Player {
-    private String figure;
+class Player {
+    private char figure;
     private int lastStepX;
     private int lastStepY;
 
-    public Player(String figure) {
+    Player(char figure) {
         this.figure = figure;
     }
 
-    public String getFigure() {
+    char getFigure() {
         return figure;
     }
 
-    public int getLastStepX() {
+    int getLastStepX() {
         return lastStepX;
     }
 
-    public int getLastStepY() {
+    int getLastStepY() {
         return lastStepY;
     }
 
-    public void displayLastStep(){
+    void displayLastStep(){
         System.out.println("last step player(" + figure +
                 ") : [" + getLastStepX() + "][" + getLastStepY() + "]");
     }
 
-    public void doStep(){
+    void doStep(){
         Scanner scanner = new Scanner(System.in);
         System.out.print("x: ");
         lastStepX = scanner.nextInt();

@@ -1,43 +1,54 @@
 package Gomoku;
 
-public class Cell {
+class Cell {
     private int x;
     private int y;
-    private String figure;
+    private char figure;
 
-    public Cell(int x, int y, String figure) {
+    Cell(int x, int y, char figure) {
         this.x = x;
         this.y = y;
         this.figure = figure;
     }
 
-    public Cell() {
+    Cell() {
         x = -1;
         y = -1;
-        figure = ".";
+        figure = '.';
     }
 
-    public int getX() {
+    boolean isValid(){
+        return x >= 0 && x <= 18 &&
+                y >= 0 && y <= 18 &&
+                figure == '.';
+    }
+
+    int getX() {
         return x;
     }
 
-    public int getY() {
+    int getY() {
         return y;
     }
 
-    public void setX(int x) {
+    void setX(int x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    void setY(int y) {
         this.y = y;
     }
 
-    public String getFigure() {
+    char getFigure() {
         return figure;
     }
 
-    public void setFigure(String figure) {
+    void setFigure(char figure) {
         this.figure = figure;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(figure);
     }
 }

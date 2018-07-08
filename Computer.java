@@ -1,152 +1,160 @@
 package Gomoku;
 
-import javafx.util.Pair;
-
 import java.util.Random;
 
-public class Computer {
-    private String figure;
+class Computer {
+    private char figure;
     private int lastStepX;
     private int lastStepY;
 
 
-    public Computer(String figure) {
+    Computer(char figure) {
         this.figure = figure;
     }
 
-    public String getFigure() {
+    char getFigure() {
         return figure;
     }
 
-    public int getLastStepX() {
+    int getLastStepX() {
         return lastStepX;
     }
 
-    public int getLastStepY() {
+    int getLastStepY() {
         return lastStepY;
     }
 
-    public void displayLastStep(){
+    void displayLastStep(){
         System.out.println("last step player(" + figure +
                 ") : [" + getLastStepX() + "][" + getLastStepY() + "]");
     }
 
-    public void doStep(String[][] desk){
-        Pair<Integer, Integer> pair = generateStep(desk);
-        lastStepX = pair.getKey();
-        lastStepY = pair.getValue();
+    void doStep(Cell cell){
+        lastStepX = cell.getX();
+        lastStepY = cell.getY();
     }
 
-    private Pair<Integer, Integer> generateStep(String[][] desk){
-        Pair<Integer, Integer> pair;
+//    private Cell generateStep(Cell[][] desk){
+//        Cell newCell;
+//        Random random = new Random();
+//        do{
+//            newCell = new Cell(random.nextInt(18), random.nextInt(18), figure);
+//        }while(!desk[newCell.getX()][newCell.getY()].isValid());
+//        return newCell;
+//    }
+
+    void doStep(Cell[][] desk){
+        Cell newCell;
         Random random = new Random();
         do{
-            pair = new Pair<>(random.nextInt(18), random.nextInt(18));
-        }while(!validPair(pair, desk));
-        return pair;
+            if(check(desk)) return;
+            else {
+                newCell = new Cell(random.nextInt(18), random.nextInt(18), figure);
+                doStep(newCell);
+            }
+
+        }while(!desk[newCell.getX()][newCell.getY()].isValid());
     }
 
-    private boolean finish(String[][] desk){
-        checkVertical(4, figure, desk);
-        return checkDiagonal(figure, desk) || checkHorizontal(figure, desk) ;
+    private boolean check(Cell[][] desk){
+        return checkDiagonal(desk) || checkHorizontal(desk) || checkVertical(desk);
     }
 
-    private boolean validPair(Pair<Integer, Integer> pair, String[][] desk){
-        return validCell(pair.getKey(), pair.getValue(), desk);
-    }
+    private boolean checkDiagonal(Cell[][] desk){
+        int size = desk.length;
 
-    private boolean validCell(int x, int y, String[][] desk){
-        return x >= 0 && x <= 18 &&
-                y >= 0 && y <= 18 &&
-                desk[y][x].equals(".");
-    }
+        for(int i = 0; i < size; i++)
+            if(leftToRightDiagonal(i, 0, desk)) return true;
 
-    private boolean checkDiagonal(String figure, String[][] desk){
-        for(int i = 0; i < desk.length; i++)
-            if(leftToRightDiagonal(i, 0, figure, desk)) return true;
+        for (int i = 1; i < size; i++)
+            if(leftToRightDiagonal(0, i, desk)) return true;
 
-        for (int i = 1; i < desk.length; i++)
-            if(leftToRightDiagonal(0, i, figure, desk)) return true;
+        for (int i = 0; i < size; i++)
+            if(rightToLeftDiagonal(i, 0, desk)) return true;
 
-        for (int i = 0; i < desk.length; i++)
-            if(rightToLeftDiagonal(i, 0, figure, desk)) return true;
-
-        for (int i = 1; i < desk.length; i++)
-            if(leftToRightDiagonal(desk.length - 1, i, figure, desk)) return true;
+        for (int i = 1; i < size; i++)
+            if(rightToLeftDiagonal(size - 1, i, desk)) return true;
 
         return false;
     }
 
-    private boolean leftToRightDiagonal(int x, int y, String figure, String[][] desk){
-        int count = 0, maxCount = 0;
-        for (int i = y, j = x; i < desk.length && j < desk.length; i++, j++) {
-            if(desk[i][j].equals(figure)) count++;
-            if(!desk[i][j].equals(figure) &&
-                    count != 0 ||
-                    i == desk.length - 1 ||
-                    j == desk.length - 1){
-                if(count > maxCount) maxCount = count;
-                count = 0;
+    private boolean leftToRightDiagonal(int x, int y, Cell[][] desk){
+        int size = desk.length;
+        Cell[] array = new Cell[5];
+
+        for (int i = y, j = x; i < size - 4 && j < size - 4; i++, j++) {
+            for(int k = 0; k < 5; k++)
+                array[k] = desk[i + k][j + k];
+
+            SetOfCell set = new SetOfCell(array);
+            Cell newStep = set.findStep(figure);
+            if(newStep != null){
+                doStep(newStep);
+                return true;
             }
+
         }
-        return maxCount >= 5;
-    }
-    
-    private boolean rightToLeftDiagonal(int x, int y, String figure, String[][] desk){
-        int count = 0, maxCount = 0;
-        for (int i = y, j = x; i < desk.length && j >= 0; i++, j--) {
-            if(desk[i][j].equals(figure)) count++;
-            if(!desk[i][j].equals(figure) &&
-                    count != 0 ||
-                    i == desk.length - 1 ||
-                    j == 0){
-                if(count > maxCount) maxCount = count;
-                count = 0;
-            }
-        }
-        return maxCount >= 5;
+        return false;
     }
 
-    private Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> checkVertical(int numberCount, String figure, String[][] desk){
-        Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> pair = null;
-        Pair<Integer, Integer> first = null, last = null;
-        int count = 0 , maxCount = 0;
-        boolean in = false;
+    private boolean rightToLeftDiagonal(int x, int y, Cell[][] desk){
+        int size = desk.length;
+        Cell[] array = new Cell[5];
 
-        for(int i = 0; i < desk.length; i++){ //2coord
-            for (int j = 0; j < desk.length; j++) { //1coord
-                if(desk[j][i].equals(figure)){
-                    count++;
+        for (int i = y, j = x; i < size - 4 && j >= 4; i++, j--) {
+            for(int k = 0; k < 5; k++)
+                array[k] = desk[i + k][j - k];
+
+            SetOfCell set = new SetOfCell(array);
+            Cell newStep = set.findStep(figure);
+            if(newStep != null){
+                doStep(newStep);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkVertical(Cell[][] desk){
+        int size = desk.length;
+        Cell[] array = new Cell[5];
+
+        for(int i = 0; i < size; i++){ //2coord
+            for (int j = 0; j < size - 4; j++) { //1coord
+
+                for(int k = 0; k < 5; k++)
+                    array[k] = desk[i][j + k];
+
+                SetOfCell set = new SetOfCell(array);
+                Cell newStep = set.findStep(figure);
+                if(newStep != null){
+                    doStep(newStep);
+                    return true;
                 }
-                if(!desk[j][i].equals(figure) && count != 0 || j == desk.length - 1){
-                    if(count > maxCount){
-                        last = new Pair<>(i, j);
-                        maxCount = count;
-                    }
-                    count = 0;
+
+            }
+        }
+        return false;
+    }
+
+    private boolean checkHorizontal(Cell[][] desk){
+        int size = desk.length;
+        Cell[] array = new Cell[5];
+
+        for(int i = 0; i < size; i++){ //1coord
+            for (int j = 0; j < size - 4; j++) { //2coord
+                for(int k = 0; k < 5; k++)
+                    array[k] = desk[j + k][i];
+
+                SetOfCell set = new SetOfCell(array);
+                Cell newStep = set.findStep(figure);
+                if(newStep != null){
+                    doStep(newStep);
+                    return true;
                 }
             }
         }
-        if(last != null) first = new Pair<>(last.getKey(), last.getValue() - maxCount); // maxCount -> 4 - 3
-
-        if(maxCount >= numberCount){
-            return pair;
-        }
-
-        return null;
+        return false;
     }
 
-    private boolean checkHorizontal(String figure, String[][] desk){
-        int count = 0 , maxCount = 0;
-        for(int i = 0; i < desk.length; i++){ //1coord
-            for (int j = 0; j < desk.length; j++) { //2coord
-                if(desk[i][j].equals(figure)) count++;
-                if(!desk[i][j].equals(figure) && count != 0 || j == desk.length - 1){
-                    if(count > maxCount) maxCount = count;
-                    count = 0;
-                }
-            }
-        }
-        return maxCount >= 5;
-    }
 }
