@@ -1,5 +1,7 @@
 package Gomoku;
 
+import java.util.Random;
+
 class SetOfCell {
     private int size = 5;
     private Cell[] cells;
@@ -13,8 +15,11 @@ class SetOfCell {
             cells[i] = new Cell();
     }
 
-    SetOfCell(int size) {
-        this.size = size;
+    SetOfCell(Cell[] array) {
+        cells = new Cell[size];
+
+        for (int i = 0; i < size; i++)
+            cells[i] = new Cell(array[i].getX(), array[i].getY(),array[i].getFigure());
     }
 
     int howManyContains(char figure){
@@ -50,9 +55,23 @@ class SetOfCell {
         return maxCount;
     }
 
-    Cell blockOrFinish(char figure){
-        Cell cell = fourFromFive(figure);
+    Cell findStep(char figure){
+        if(howManyContains('.') == 0) return null;
+
+        Cell cell = finish(figure);
+        if(cell != null) return cell;
+        cell = block(figure);
+        if(cell != null) return cell;
+
         return cell;
+    }
+
+    Cell block(char figure){
+        return threeFromFive(figure);
+    }
+
+    Cell finish(char figure){
+        return fourFromFive(figure);
     }
 
     private Cell fourFromFive(char figure){
@@ -60,6 +79,12 @@ class SetOfCell {
             howManyNearby(figure);
             return first != null ? first : last;
         }
+        return null;
+    }
+
+    private Cell threeFromFive(char figure){
+        figure = (figure == 'X') ? 'O' : 'X';
+        if(howManyNearby(figure) >= 3 ) return first != null ? first : last;
         return null;
     }
 }
