@@ -19,24 +19,24 @@ public class Game {
             if(whoFirst.equals("player")){
                 doItUntilItWorksOutForPlayer();
                 if(showBoard) board.display();
-                if(verificationX()){
+                if(verification('X')){
                     xWin = true; continue;
                 }
 
                 doItUntilWorksOutForComputer();
                 if(showBoard) board.display();
-                if(verificationO()){
+                if(verification('O')){
                     oWin = true; continue;
                 }
             } else {
                 doItUntilWorksOutForComputer();
                 if(showBoard) board.display();
-                if(verificationX()){
+                if(verification('X')){
                     xWin = true; continue;
                 }
                 doItUntilItWorksOutForPlayer();
                 if(showBoard) board.display();
-                if(verificationO()){
+                if(verification('O')){
                     oWin = true; continue;
                 }
             }
@@ -86,12 +86,8 @@ public class Game {
         }while (again);
     }
 
-    private boolean verificationX(){
-        return board.checkVictory("X");
-    }
-
-    private boolean verificationO(){
-        return board.checkVictory("O");
+    private boolean verification(char figure){
+        return board.checkVictory(figure);
     }
 
     private void createPlayersAndBoard(){
