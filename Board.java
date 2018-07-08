@@ -34,16 +34,16 @@ public class Board {
     public boolean isFull(){
         for (int i = 0; i < desk.length; i++)
             for (int j = 0; j < desk.length; j++)
-                if(desk[i][j].equals(".")) return false;
+                if(desk[i][j].getFigure() == '.') return false;
 
         return true;
     }
 
-    public boolean checkVictory(String figure){
+    public boolean checkVictory(char figure){
         return checkDiagonal(figure) || checkHorizontal(figure) || checkVertical(figure);
     }
 
-    private boolean checkDiagonal(String figure){
+    private boolean checkDiagonal(char figure){
         for(int i = 0; i < desk.length; i++)
             if(leftToRightDiagonal(i, 0, figure)) return true;
 
@@ -59,11 +59,11 @@ public class Board {
         return false;
     }
 
-    private boolean leftToRightDiagonal(int x, int y, String figure){
+    private boolean leftToRightDiagonal(int x, int y, char figure){
         int count = 0, maxCount = 0;
         for (int i = y, j = x; i < desk.length && j < desk.length; i++, j++) {
-            if(desk[i][j].equals(figure)) count++;
-            if(!desk[i][j].equals(figure) &&
+            if(desk[i][j].getFigure() == figure) count++;
+            if(desk[i][j].getFigure() != figure &&
                     count != 0 ||
                     i == desk.length - 1 ||
                     j == desk.length - 1){
@@ -74,11 +74,11 @@ public class Board {
         return maxCount >= 5;
     }
 
-    private boolean rightToLeftDiagonal(int x, int y, String figure){
+    private boolean rightToLeftDiagonal(int x, int y, char figure){
         int count = 0, maxCount = 0;
         for (int i = y, j = x; i < desk.length && j >= 0; i++, j--) {
-            if(desk[i][j].equals(figure)) count++;
-            if(!desk[i][j].equals(figure) &&
+            if(desk[i][j].getFigure() == figure) count++;
+            if(desk[i][j].getFigure() != figure &&
                     count != 0 ||
                     i == desk.length - 1 ||
                     j == 0){
@@ -89,12 +89,12 @@ public class Board {
         return maxCount >= 5;
     }
 
-    private boolean checkVertical(String figure){
+    private boolean checkVertical(char figure){
         int count = 0 , maxCount = 0;
         for(int i = 0; i < desk.length; i++){ //2coord
             for (int j = 0; j < desk.length; j++) { //1coord
-                if(desk[j][i].equals(figure)) count++;
-                if(!desk[j][i].equals(figure) && count != 0 || j == desk.length - 1){
+                if(desk[i][j].getFigure() == figure) count++;
+                if(desk[i][j].getFigure() != figure && count != 0 || j == desk.length - 1){
                     if(count > maxCount) maxCount = count;
                     count = 0;
                 }
@@ -103,12 +103,12 @@ public class Board {
         return maxCount >= 5;
     }
 
-    private boolean checkHorizontal(String figure){
+    private boolean checkHorizontal(char figure){
         int count = 0 , maxCount = 0;
         for(int i = 0; i < desk.length; i++){ //1coord
             for (int j = 0; j < desk.length; j++) { //2coord
-                if(desk[i][j].equals(figure)) count++;
-                if(!desk[i][j].equals(figure) && count != 0 || j == desk.length - 1){
+                if(desk[i][j].getFigure() == figure) count++;
+                if(desk[i][j].getFigure() != figure && count != 0 || j == desk.length - 1){
                     if(count > maxCount) maxCount = count;
                     count = 0;
                 }
