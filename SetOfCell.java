@@ -1,7 +1,5 @@
 package Gomoku;
 
-import java.util.Random;
-
 class SetOfCell {
     private int size = 5;
     private Cell[] cells;
@@ -55,8 +53,38 @@ class SetOfCell {
         return maxCount;
     }
 
+    private Cell threeNearbyWithSpace(char figure){
+        boolean once = false;
+        int count = 0, maxCount = 0;
+        Cell prev = null, next = null;
+
+        for (Cell c : cells) {
+            if (c.getFigure() == figure)
+                count++;
+            else if(c.getFigure() == '.' && count > 0 && !once){
+                first = c;
+                last = c;
+                count++;
+                once = true;
+            }
+            else {
+                if(count != 0) next = c;
+
+                if(maxCount < count){
+                    maxCount = count;
+                    first = prev;
+                    last = next;
+                }
+                count = 0;
+            }
+            if(count == 0) prev = c;
+        }
+        return maxCount == 4 ? first : null;
+    }
+
     Cell findStep(char figure){
-        if(howManyContains('.') == 0) return null;
+        if(howManyContains('.') == 0)
+            return null;
 
         Cell cell = finish(figure);
         if(cell != null) return cell;
@@ -67,11 +95,34 @@ class SetOfCell {
     }
 
     Cell block(char figure){
-        return threeFromFive(figure);
+        figure = (figure == 'X') ? 'O' : 'X';
+        Cell cell;
+
+        cell = fourFromFive(figure);
+        if(cell != null) return cell;
+
+        cell = threeFromFive(figure);
+        if(cell != null) return cell;
+
+        cell = threeFromFiveWithSpace(figure);
+        if(cell != null) return cell;
+
+        return null;
     }
 
-    Cell finish(char figure){
-        return fourFromFive(figure);
+    private Cell finish(char figure){
+        Cell cell;
+
+        cell = fourFromFive(figure);
+        if(cell != null) return cell;
+
+        cell = threeFromFive(figure);
+        if(cell != null) return cell;
+
+        cell = threeFromFiveWithSpace(figure);
+        if(cell != null) return cell;
+
+        return null;
     }
 
     private Cell fourFromFive(char figure){
@@ -83,8 +134,15 @@ class SetOfCell {
     }
 
     private Cell threeFromFive(char figure){
-        figure = (figure == 'X') ? 'O' : 'X';
-        if(howManyNearby(figure) >= 3 ) return first != null ? first : last;
+        if(howManyNearby(figure) == 3 && howManyContains('.') >= 1)
+            return first != null && first.getFigure() == '.' ? first : last;
+        return null;
+    }
+
+    private Cell threeFromFiveWithSpace(char figure){
+        if(howManyNearby(figure) == 2 && howManyContains('.') >= 1 && howManyContains(figure) == 3) {
+            return threeNearbyWithSpace(figure);
+        }
         return null;
     }
 }
