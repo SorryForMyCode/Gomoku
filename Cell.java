@@ -3,9 +3,9 @@ package Gomoku;
 public class Cell {
     private int x;
     private int y;
-    private String figure;
+    private char figure;
 
-    public Cell(int x, int y, String figure) {
+    public Cell(int x, int y, char figure) {
         this.x = x;
         this.y = y;
         this.figure = figure;
@@ -14,7 +14,13 @@ public class Cell {
     public Cell() {
         x = -1;
         y = -1;
-        figure = ".";
+        figure = '.';
+    }
+
+    public boolean isValid(){
+        return x >= 0 && x <= 18 &&
+                y >= 0 && y <= 18 &&
+                figure == '.';
     }
 
     public int getX() {
@@ -33,11 +39,11 @@ public class Cell {
         this.y = y;
     }
 
-    public String getFigure() {
+    public char getFigure() {
         return figure;
     }
 
-    public void setFigure(String figure) {
+    public void setFigure(char figure) {
         this.figure = figure;
     }
 }
