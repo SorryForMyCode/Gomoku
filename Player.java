@@ -3,15 +3,15 @@ package Gomoku;
 import java.util.Scanner;
 
 public class Player {
-    private String figure;
+    private char figure;
     private int lastStepX;
     private int lastStepY;
 
-    public Player(String figure) {
+    public Player(char figure) {
         this.figure = figure;
     }
 
-    public String getFigure() {
+    public char getFigure() {
         return figure;
     }
 
