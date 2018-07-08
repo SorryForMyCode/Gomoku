@@ -1,23 +1,23 @@
 package Gomoku;
 
-public class SetOfCell {
+class SetOfCell {
     private int size = 5;
     private Cell[] cells;
     private Cell first = null;
     private Cell last = null;
 
-    public SetOfCell() {
+    SetOfCell() {
         cells = new Cell[size];
 
         for (int i = 0; i < size; i++)
             cells[i] = new Cell();
     }
 
-    public SetOfCell(int size) {
+    SetOfCell(int size) {
         this.size = size;
     }
 
-    public int howManyContains(char figure){
+    int howManyContains(char figure){
         int count = 0;
 
         for (Cell c : cells)
@@ -50,7 +50,7 @@ public class SetOfCell {
         return maxCount;
     }
 
-    public Cell blockOrFinish(char figure){
+    Cell blockOrFinish(char figure){
         Cell cell = fourFromFive(figure);
         return cell;
     }
