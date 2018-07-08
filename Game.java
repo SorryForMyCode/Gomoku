@@ -88,7 +88,7 @@ class Game {
                 board.doStep(computer.getLastStepX(), computer.getLastStepY(), computer.getFigure());
                 again = false;
             } catch (StepError stepError) {
-                System.out.println("Try again");
+                System.out.println("Try again [" + computer.getLastStepX() + "][" + computer.getLastStepY() + "]");
             }
         }while (again);
     }
