@@ -104,8 +104,8 @@ class Board {
         int count = 0 , maxCount = 0;
         for(int i = 0; i < size; i++){ //1coord
             for (int j = 0; j < size; j++) { //2coord
-                if(desk[i][j].getFigure() == figure) count++;
-                if(desk[i][j].getFigure() != figure && count != 0 || j == size - 1){
+                if(desk[j][i].getFigure() == figure) count++;
+                if(desk[j][i].getFigure() != figure && count != 0 || j == size - 1){
                     if(count > maxCount) maxCount = count;
                     count = 0;
                 }
